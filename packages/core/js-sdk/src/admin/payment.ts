@@ -130,6 +130,79 @@ export class Payment {
   }
 
   /**
+   * This method retrieves a payment provider's details. It sends a request to the
+   * [Get Payment Provider](https://docs.medusajs.com/api/admin#payments_getpaymentspaymentprovidersid)
+   * API route.
+   *
+   * @param id - The payment provider's ID.
+   * @param query - Configure the fields to retrieve in the payment provider.
+   * @param headers - Headers to pass in the request
+   * @returns The payment provider's details.
+   *
+   * @example
+   * To retrieve a payment provider by its ID:
+   *
+   * ```ts
+   * sdk.admin.payment.retrievePaymentProvider("pp_stripe_stripe")
+   * .then(({ payment_provider }) => {
+   *   console.log(payment_provider)
+   * })
+   * ```
+   */
+  async retrievePaymentProvider(
+    id: string,
+    query?: HttpTypes.AdminGetPaymentProvidersParams,
+    headers?: ClientHeaders
+  ) {
+    return await this.client.fetch<HttpTypes.AdminPaymentProviderResponse>(
+      `/admin/payments/payment-providers/${id}`,
+      {
+        query,
+        headers,
+      }
+    )
+  }
+
+  /**
+   * This method updates a payment provider's configuration data. It sends a request to the
+   * [Update Payment Provider](https://docs.medusajs.com/api/admin#payments_putpaymentspaymentprovidersid)
+   * API route.
+   *
+   * @param id - The payment provider's ID.
+   * @param body - The data to update in the payment provider.
+   * @param query - Configure the fields to retrieve in the payment provider.
+   * @param headers - Headers to pass in the request
+   * @returns The payment provider's details.
+   *
+   * @example
+   * sdk.admin.payment.updatePaymentProvider("pp_paypal_paypal-default", {
+   *   data: {
+   *     clientId: "abc",
+   *     clientSecret: "xyz"
+   *   }
+   * })
+   * .then(({ payment_provider }) => {
+   *   console.log(payment_provider)
+   * })
+   */
+  async updatePaymentProvider(
+    id: string,
+    body: { data?: Record<string, unknown> },
+    query?: HttpTypes.AdminGetPaymentProvidersParams,
+    headers?: ClientHeaders
+  ) {
+    return await this.client.fetch<HttpTypes.AdminPaymentProviderResponse>(
+      `/admin/payments/payment-providers/${id}`,
+      {
+        method: "PUT",
+        headers,
+        body,
+        query,
+      }
+    )
+  }
+
+  /**
    * This method retrieves a payment's details. It sends a request to the 
    * [Get Payment](https://docs.medusajs.com/api/admin#payments_getpaymentsid)
    * API route.

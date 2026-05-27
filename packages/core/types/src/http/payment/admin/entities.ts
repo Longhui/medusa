@@ -11,6 +11,11 @@ export interface AdminPaymentProvider extends BasePaymentProvider {
    * Whether the payment provider is enabled.
    */
   is_enabled: boolean
+
+  /**
+   * Holds provider-specific configuration data in key-value pairs.
+   */
+  data?: Record<string, unknown> | null
 }
 
 export interface AdminPayment extends BasePayment {

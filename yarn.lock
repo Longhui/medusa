@@ -50,6 +50,149 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@apimatic/authentication-adapters@npm:^0.5.14":
+  version: 0.5.14
+  resolution: "@apimatic/authentication-adapters@npm:0.5.14"
+  dependencies:
+    "@apimatic/core-interfaces": ^0.2.14
+    "@apimatic/http-headers": ^0.3.8
+    "@apimatic/http-query": ^0.3.9
+    tslib: ^2.8.1
+  checksum: 7effa447df48d26f828f51844ce73e3cf0da75108c276470df68859cf1f9db72de85caaa53177a2f6f8d8c35b6a9a47ce67e2c17d655ac9a7b145ee58783ada3
+  languageName: node
+  linkType: hard
+
+"@apimatic/axios-client-adapter@npm:^0.3.20":
+  version: 0.3.21
+  resolution: "@apimatic/axios-client-adapter@npm:0.3.21"
+  dependencies:
+    "@apimatic/convert-to-stream": ^0.1.9
+    "@apimatic/core-interfaces": ^0.2.14
+    "@apimatic/file-wrapper": ^0.3.9
+    "@apimatic/http-headers": ^0.3.8
+    "@apimatic/http-query": ^0.3.9
+    "@apimatic/json-bigint": ^1.2.0
+    "@apimatic/proxy": ^0.1.4
+    axios: ^1.8.4
+    detect-browser: ^5.3.0
+    detect-node: ^2.1.0
+    form-data: ^4.0.1
+    lodash.flatmap: ^4.5.0
+    tiny-warning: ^1.0.3
+    tslib: ^2.8.1
+  checksum: 77837e3afcae62dafa67edb50561446d0a1365bcddcb255a9cc1fc048e8562813864b713e328eb395273c53f3ae5f0037e40cce4d042af72020b3cd60e30a8b3
+  languageName: node
+  linkType: hard
+
+"@apimatic/convert-to-stream@npm:^0.1.9":
+  version: 0.1.9
+  resolution: "@apimatic/convert-to-stream@npm:0.1.9"
+  dependencies:
+    tslib: 2.8.1
+  checksum: 2b2c33dfcfc9c101bf5953d44ba274289fbde434049ab7e52a12fc90af0cba9257cdd45b06dc3515c11ef5a157cdf1171e7ab9ea18b9334dfecc98da8957a1e2
+  languageName: node
+  linkType: hard
+
+"@apimatic/core-interfaces@npm:^0.2.14":
+  version: 0.2.14
+  resolution: "@apimatic/core-interfaces@npm:0.2.14"
+  dependencies:
+    "@apimatic/file-wrapper": ^0.3.9
+    "@apimatic/json-bigint": ^1.2.0
+    tslib: ^2.8.1
+  checksum: 4df44ed71b66981b440adf682d62e813fc2f24f80c9b79e44e19031737fa95faf06a10dd9e1f521827a46f46062beeae64ac3c20be178626777c3ebce185c0a5
+  languageName: node
+  linkType: hard
+
+"@apimatic/core@npm:^0.10.28":
+  version: 0.10.29
+  resolution: "@apimatic/core@npm:0.10.29"
+  dependencies:
+    "@apimatic/convert-to-stream": ^0.1.9
+    "@apimatic/core-interfaces": ^0.2.14
+    "@apimatic/file-wrapper": ^0.3.9
+    "@apimatic/http-headers": ^0.3.8
+    "@apimatic/http-query": ^0.3.9
+    "@apimatic/json-bigint": ^1.2.0
+    "@apimatic/schema": ^0.7.21
+    detect-browser: ^5.3.0
+    detect-node: ^2.1.0
+    form-data: ^4.0.1
+    lodash.defaultsdeep: ^4.6.1
+    lodash.flatmap: ^4.5.0
+    tiny-warning: ^1.0.3
+    tslib: ^2.8.1
+  checksum: af1555080c6b56e6c4fb0a0dbf34e16feb0077a90ef23ae24fc6cc0454d21123ffd7e948607291c418ccdacd397dbdcc4f9e92d67efa201d8b4319349e2b82cd
+  languageName: node
+  linkType: hard
+
+"@apimatic/file-wrapper@npm:^0.3.9":
+  version: 0.3.9
+  resolution: "@apimatic/file-wrapper@npm:0.3.9"
+  dependencies:
+    tslib: 2.8.1
+  checksum: 0e609ad23e216ae3de2cfe78051f5831afd10e45ca2ade010ce7a988b5fa073fe2374fc17f971857089181630768f897efdf6e263f7f84f8f00196865cb18f43
+  languageName: node
+  linkType: hard
+
+"@apimatic/http-headers@npm:^0.3.8":
+  version: 0.3.8
+  resolution: "@apimatic/http-headers@npm:0.3.8"
+  dependencies:
+    tslib: 2.8.1
+  checksum: 2edd7a08eee35978a1748f75a8f17a3c071e212b240138bf234d359f9e6d2d5c896bf839bbbccb558ab2c7e23cee29a796a3ed9cb216cbaa040981a224528e7e
+  languageName: node
+  linkType: hard
+
+"@apimatic/http-query@npm:^0.3.9":
+  version: 0.3.9
+  resolution: "@apimatic/http-query@npm:0.3.9"
+  dependencies:
+    "@apimatic/core-interfaces": ^0.2.14
+    "@apimatic/file-wrapper": ^0.3.9
+    tslib: ^2.8.1
+  checksum: 20d94d38975cc0fbdca0d0e6b917340636a70b02c36341d5dc5c4bafecfb1ef21ab728d731181d09c2de132296773f2994ac39330b4666d8a842002b03442b47
+  languageName: node
+  linkType: hard
+
+"@apimatic/json-bigint@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@apimatic/json-bigint@npm:1.2.0"
+  checksum: 2e4b30a426eb912ac237242f16d277071360e1b7cd9ce1dd590da626dce10dd22a64513624223ea736df331bd1290bf696b2d24d7e9b9dc1fcd061af6f9be657
+  languageName: node
+  linkType: hard
+
+"@apimatic/oauth-adapters@npm:^0.4.18":
+  version: 0.4.18
+  resolution: "@apimatic/oauth-adapters@npm:0.4.18"
+  dependencies:
+    "@apimatic/core-interfaces": ^0.2.14
+    "@apimatic/file-wrapper": ^0.3.9
+    "@apimatic/http-headers": ^0.3.8
+    tslib: ^2.8.1
+  checksum: 4b5392a91f1cd553271a4e0fc70f5bbe1fe6f0bcb803a900d7ca5a1a5018662fa77ee8d82257d7a18f11bb7ae6954605408f44b937c3b1f9bcb1f7c13c0018c0
+  languageName: node
+  linkType: hard
+
+"@apimatic/proxy@npm:^0.1.4":
+  version: 0.1.4
+  resolution: "@apimatic/proxy@npm:0.1.4"
+  dependencies:
+    http-proxy-agent: ^7.0.2
+    https-proxy-agent: ^7.0.6
+  checksum: f914de1913f3f1bb31f93b5939d9d3b9510e2271c23c1025688d887d5ab277759b0ab1937ea31af0dcb6529fe6eadda77d85ac1fa3f4e2bad4e324f0b18a8596
+  languageName: node
+  linkType: hard
+
+"@apimatic/schema@npm:^0.7.21":
+  version: 0.7.21
+  resolution: "@apimatic/schema@npm:0.7.21"
+  dependencies:
+    tslib: ^2.8.1
+  checksum: 64c0544295a75a4b56e1aca81dc8aa6c92a48c8c0ea917dcbd8769ba0037b27f251e14575e8e300010e9a0f68445a78760bf8e1e273ceb08de47723fd5a856e7
+  languageName: node
+  linkType: hard
+
 "@ardatan/relay-compiler@npm:^12.0.3":
   version: 12.0.3
   resolution: "@ardatan/relay-compiler@npm:12.0.3"
@@ -4076,6 +4219,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@medusajs/payment-paypal@workspace:packages/modules/providers/payment-paypal":
+  version: 0.0.0-use.local
+  resolution: "@medusajs/payment-paypal@workspace:packages/modules/providers/payment-paypal"
+  dependencies:
+    "@medusajs/framework": 2.15.2
+    "@paypal/paypal-server-sdk": ^2.3.0
+  peerDependencies:
+    "@medusajs/framework": 2.15.2
+  languageName: unknown
+  linkType: soft
+
 "@medusajs/payment-stripe@2.15.2, @medusajs/payment-stripe@workspace:packages/modules/providers/payment-stripe":
   version: 0.0.0-use.local
   resolution: "@medusajs/payment-stripe@workspace:packages/modules/providers/payment-stripe"
@@ -5318,6 +5472,19 @@ __metadata:
   dependencies:
     "@noble/hashes": ^1.1.5
   checksum: 6576b73de49d826b0f33cbab88424dec1f6fa454a9e59a7b621f78c2cfdd2e59d7f48175826d698940a717f45eeb5e87a508583a7316e608f6a05a861a40c129
+  languageName: node
+  linkType: hard
+
+"@paypal/paypal-server-sdk@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@paypal/paypal-server-sdk@npm:2.3.0"
+  dependencies:
+    "@apimatic/authentication-adapters": ^0.5.14
+    "@apimatic/axios-client-adapter": ^0.3.20
+    "@apimatic/core": ^0.10.28
+    "@apimatic/oauth-adapters": ^0.4.18
+    "@apimatic/schema": ^0.7.21
+  checksum: 61313c73e66d685100b6845a9508bcc84fcf15823ea1e57fc530ca4cbf753b99b3936a5e9daa7bb0a7dece86f67080132484769ee8dac4f404cef6fc0b8e9032
   languageName: node
   linkType: hard
 
@@ -16048,6 +16215,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"detect-browser@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "detect-browser@npm:5.3.0"
+  checksum: 88d49b70ce3836e7971345b2ebdd486ad0d457d1e4f066540d0c12f9210c8f731ccbed955fcc9af2f048f5d4629702a8e46bedf5bcad42ad49a3a0927bfd5a76
+  languageName: node
+  linkType: hard
+
 "detect-indent@npm:^6.0.0":
   version: 6.1.0
   resolution: "detect-indent@npm:6.1.0"
@@ -16073,6 +16247,13 @@ __metadata:
   version: 1.1.0
   resolution: "detect-node-es@npm:1.1.0"
   checksum: e562f00de23f10c27d7119e1af0e7388407eb4b06596a25f6d79a360094a109ff285de317f02b090faae093d314cf6e73ac3214f8a5bb3a0def5bece94557fbe
+  languageName: node
+  linkType: hard
+
+"detect-node@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "detect-node@npm:2.1.0"
+  checksum: f039f601790f2e9d4654e499913259a798b1f5246ae24f86ab5e8bd4aaf3bce50484234c494f11fb00aecb0c6e2733aa7b1cf3f530865640b65fbbd65b2c4e09
   languageName: node
   linkType: hard
 
@@ -17788,7 +17969,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:^4.0.0, form-data@npm:^4.0.4, form-data@npm:~4.0.0":
+"form-data@npm:^4.0.0, form-data@npm:^4.0.1, form-data@npm:^4.0.4, form-data@npm:~4.0.0":
   version: 4.0.5
   resolution: "form-data@npm:4.0.5"
   dependencies:
@@ -20910,6 +21091,20 @@ __metadata:
   version: 4.2.0
   resolution: "lodash.defaults@npm:4.2.0"
   checksum: d5b77aeb702caa69b17be1358faece33a84497bcca814897383c58b28a2f8dfc381b1d9edbec239f8b425126a3bbe4916223da2a576bb0411c2cefd67df80707
+  languageName: node
+  linkType: hard
+
+"lodash.defaultsdeep@npm:^4.6.1":
+  version: 4.6.1
+  resolution: "lodash.defaultsdeep@npm:4.6.1"
+  checksum: 0031ca3055d5482fc2e9b55d0ee174a3e956039996fac52dbe94ca67eb50bb72ffc75d0eb86bcc782fefc597ebbc1798df941f27382bec23138e53180427700b
+  languageName: node
+  linkType: hard
+
+"lodash.flatmap@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.flatmap@npm:4.5.0"
+  checksum: 11627ae4ca8332f7bbc9b0c99948127504a17b19720d85979de0184a6992fe706633acd673ce797197c3fb185318a65ad6590a3beae5428a9c8d5d6391f3db80
   languageName: node
   linkType: hard
 
@@ -27022,6 +27217,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tiny-warning@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "tiny-warning@npm:1.0.3"
+  checksum: ef8531f581b30342f29670cb41ca248001c6fd7975ce22122bd59b8d62b4fc84ad4207ee7faa95cde982fa3357cd8f4be650142abc22805538c3b1392d7084fa
+  languageName: node
+  linkType: hard
+
 "tinybench@npm:^2.9.0":
   version: 2.9.0
   resolution: "tinybench@npm:2.9.0"
@@ -27392,17 +27594,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tslib@npm:2.8.1, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.1, tslib@npm:^2.6.2, tslib@npm:^2.6.3, tslib@npm:^2.8.0, tslib@npm:^2.8.1":
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: 9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
+  languageName: node
+  linkType: hard
+
 "tslib@npm:^1":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: 69ae09c49eea644bc5ebe1bca4fa4cc2c82b7b3e02f43b84bd891504edf66dbc6b2ec0eef31a957042de2269139e4acff911e6d186a258fb14069cd7f6febce2
-  languageName: node
-  linkType: hard
-
-"tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.1, tslib@npm:^2.6.2, tslib@npm:^2.6.3, tslib@npm:^2.8.0":
-  version: 2.8.1
-  resolution: "tslib@npm:2.8.1"
-  checksum: 9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
   languageName: node
   linkType: hard
 

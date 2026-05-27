@@ -33,6 +33,7 @@ import {
   ProviderWebhookPayload,
   UpdateAccountHolderDTO,
   UpdatePaymentDTO,
+  UpdatePaymentProviderDTO,
   UpdatePaymentSessionDTO,
   UpdateRefundReasonDTO,
   UpsertPaymentCollectionDTO,
@@ -853,6 +854,17 @@ export interface IPaymentModuleService extends IModuleService {
     config?: FindConfig<PaymentProviderDTO>,
     sharedContext?: Context
   ): Promise<[PaymentProviderDTO[], number]>
+
+  /**
+   * This method updates payment providers.
+   *
+   * @param {UpdatePaymentProviderDTO[]} data - The payment providers data to update.
+   * @param {Context} sharedContext - A context used to share resources, such as transaction manager, between the application and the module.
+   * @returns {Promise<PaymentProviderDTO[]>} The updated payment providers.
+   */
+  updatePaymentProviders(
+    data: UpdatePaymentProviderDTO[]
+  ): Promise<PaymentProviderDTO[]>
 
   /**
    * This method creates an account holder in the payment provider, if the provider supports account holders.

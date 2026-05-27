@@ -91,6 +91,7 @@
     "@medusajs/notification-sendgrid": "2.15.2",
     "@medusajs/order": "2.15.2",
     "@medusajs/payment": "2.15.2",
+    "@medusajs/payment-paypal": "2.15.2",
     "@medusajs/payment-stripe": "2.15.2",
     "@medusajs/pricing": "2.15.2",
     "@medusajs/product": "2.15.2",

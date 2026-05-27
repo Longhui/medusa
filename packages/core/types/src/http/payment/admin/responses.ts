@@ -54,6 +54,13 @@ export type RefundReasonsResponse = PaginatedResponse<{
   refund_reasons: AdminRefundReason[]
 }>
 
+export interface AdminPaymentProviderResponse {
+  /**
+   * The payment provider's details.
+   */
+  payment_provider: AdminPaymentProvider
+}
+
 export type AdminPaymentProviderListResponse = PaginatedResponse<{
   /**
    * The list of payment providers.

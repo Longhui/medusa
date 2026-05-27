@@ -1,163 +1,145 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # Medusa Core
 
 Open-source commerce platform. TypeScript monorepo with 30+ modular commerce packages.
 
-### 1. Codebase Structure
+## Codebase Structure
 
-**Monorepo Organization:**
 ```
 /packages/
-├── medusa/              # Main Medusa package
+├── medusa/              # Main Medusa package (API routes, admin, store)
 ├── core/                # Core framework packages
-│   ├── framework/       # Core runtime
-│   ├── types/           # TypeScript definitions
-│   ├── utils/           # Utilities
-│   ├── workflows-sdk/   # Workflow composition
-│   ├── core-flows/      # Predefined workflows
-│   └── modules-sdk/     # Module development
+│   ├── framework/       # Core runtime: HTTP, database, subscribers, jobs, links
+│   ├── types/           # TypeScript definitions (DTOs, interfaces)
+│   ├── utils/           # Utilities, decorators, model DSL
+│   ├── workflows-sdk/   # Workflow composition engine
+│   ├── core-flows/      # Predefined commerce workflows
+│   ├── modules-sdk/     # Module loading/registration system
+│   ├── orchestration/   # Workflow orchestration engine
+│   └── js-sdk/          # Client SDK (store, admin, auth)
 ├── modules/             # 30+ commerce modules
-│   ├── product/, order/, cart/, payment/...
-│   └── providers/       # 15+ provider implementations
+│   ├── product/         # Example: models/, services/, migrations/
+│   ├── order/, cart/, payment/ ...
+│   └── providers/       # 15+ provider implementations (file-s3, payment-stripe, ...)
 ├── admin/               # Dashboard packages
-│   └── dashboard/       # React admin UI
+│   └── dashboard/       # React admin UI (Vite, Tailwind, i18n)
 ├── cli/                 # CLI tools
-└── design-system/       # UI components
-/integration-tests/      # Full-stack tests
-/www/                    # Documentation site
+├── design-system/       # UI component library (React, Tailwind, Storybook)
+├── integration-tests/   # Full-stack integration tests
+│   ├── http/            # HTTP API tests (admin + store routes)
+│   └── modules/         # Module integration tests
 ```
 
-**Key Directories:**
-- `packages/core/framework/` - Core runtime, HTTP, database
-- `packages/medusa/src/api/` - API routes
-- `packages/modules/` - Commerce feature modules
-- `packages/admin/dashboard/` - Admin React app
-
-### 2. Build System & Commands
+## Essential Commands
 
 **Package Manager**: Yarn 3.2.1 with node-modules linker
 
-**Essential Commands:**
 ```bash
 # Install dependencies
 yarn install
-# Build all packages
+
+# Build all packages (via Turborepo)
 yarn build
+
 # Build specific package
 yarn workspace @medusajs/medusa build
-# Watch mode (in package directory)
+
+# Watch mode (inside package directory)
 yarn watch
-```
 
-**Testing Commands:**
-```bash
-# All unit tests
+# Lint
+yarn lint
+
+# Format
+yarn prettier --write <file>
+
+# Run all unit tests
 yarn test
-# Package integration tests
-yarn test:integration:packages
-# HTTP integration tests
-yarn test:integration:http
-# API integration tests
-yarn test:integration:api
-# Module integration tests
-yarn test:integration:modules
+
+# Run tests in specific package
+yarn workspace @medusajs/product test
+
+# Integration tests
+yarn test:integration:packages  # package-level integration tests
+yarn test:integration:http      # HTTP API integration tests
+yarn test:integration:modules   # module integration tests
+
+# Generate types / OAS
+yarn openai:types
 ```
 
-### 3. Testing Conventions
+## Module Internal Structure
 
-**Frameworks:**
-- Jest 29.7.0 (backend/core)
-- Vitest 3.0.5 (admin/frontend)
+Each commerce module follows a consistent layout:
 
-**Test Locations:**
-- Unit tests: `__tests__/` directories alongside source
-- Package integration tests: `packages/*/integration-tests/__tests__/`
-- HTTP integration tests: `integration-tests/http/__tests__/`
+```
+packages/modules/<module>/
+├── src/
+│   ├── models/          # MikroORM entity models (using `model.*` DSL)
+│   ├── migrations/      # Migration files (timestamp-based)
+│   ├── services/        # Service class extending MedusaService
+│   ├── repositories/    # Custom repository overrides (optional)
+│   ├── types/           # Module-specific types/DTOs
+│   ├── utils/           # Helpers
+│   ├── index.ts         # Module entry point (registers models, services, loaders)
+│   └── joiner-config.ts # Link/relationship configuration
+```
 
-**Patterns:**
-- File extension: `.spec.ts` or `.test.ts`
-- Unit test structure: `describe/it` blocks
-- Integration tests: Use custom test runners with DB setup
+### Model Definitions (DSL)
 
-### 4. Code Style Conventions
+Models use a fluent DSL from `@medusajs/framework/utils`:
 
-**Formatting (Prettier):**
-- No semicolons
-- Double quotes
-- 2 space indentation
-- ES5 trailing commas
-- Always use parens in arrow functions
-
-**TypeScript:**
-- Target: ES2021
-- Module: Node16
-- Strict null checks enabled
-- Decorators enabled (experimental)
-
-**Naming Conventions:**
-- Files: kebab-case (`define-config.ts`)
-- Types/Interfaces/Classes: PascalCase
-- Functions/Variables: camelCase
-- Constants: SCREAMING_SNAKE_CASE
-- DB fields: snake_case
-
-**Export Patterns:**
-- Barrel exports via `export * from`
-- Named re-exports for specific items
-
-### 5. Architecture Patterns
-
-#### 5.1 Module Pattern - Services with Decorators
-
-**Service Structure:**
-- Extend `MedusaService<T>` with typed model definitions
-- Inject dependencies via constructor
-- Use decorators for cross-cutting concerns
-
-**Key Decorators:**
-- `@InjectManager()` - Inject entity manager (use on public methods)
-- `@InjectTransactionManager()` - Inject transaction manager (use on protected methods)
-- `@MedusaContext()` - Inject shared context as parameter
-- `@EmitEvents()` - Emit domain events after operation
-
-**Example:**
 ```typescript
-export class OrderModuleService
-  extends MedusaService<{ Order: { dto: OrderDTO } }>({ Order })
-  implements IOrderModuleService
-{
-  @InjectManager()
-  @EmitEvents()
-  async deleteOrders(
-    ids: string[],
-    @MedusaContext() sharedContext: Context = {}
-  ) {
-    return await this.deleteOrders_(ids, sharedContext)
+import { model } from "@medusajs/framework/utils"
+
+const Product = model.define("Product", {
+  id: model.id({ prefix: "prod" }).primaryKey(),
+  title: model.text().searchable(),
+  handle: model.text(),
+  description: model.text().nullable(),
+  is_giftcard: model.boolean().default(false),
+  status: model.enum(ProductUtils.ProductStatus).default(ProductUtils.ProductStatus.DRAFT),
+  weight: model.float().nullable(),
+  // Relationships
+  categories: model.manyToMany(() => ProductCategory, {
+    mappedBy: "products",
+  }),
+  collection: model.belongsTo(() => ProductCollection, { nullable: true }),
+  variants: model.hasMany(() => ProductVariant, {
+    mappedBy: "product",
+  }),
+  metadata: model.json().nullable(),
+})
+```
+
+### Migrations
+
+Migrations live in `src/migrations/` following a naming convention `Migration<YYYYMMDD><description>.ts`. They manually define the SQL for migration + rollback:
+
+```typescript
+import { Migration } from "@mikro-orm/migrations"
+
+export class Migration20241122120331 extends Migration {
+  async up(): Promise<void> {
+    this.addSql('ALTER TABLE "product" ADD COLUMN "type_id" text NULL;')
   }
 
-  @InjectTransactionManager()
-  protected async deleteOrders_(
-    ids: string[],
-    @MedusaContext() sharedContext: Context = {}
-  ) {
-    await this.orderService_.softDelete(ids, sharedContext)
+  async down(): Promise<void> {
+    this.addSql('ALTER TABLE "product" DROP COLUMN "type_id";')
   }
 }
 ```
 
-**Reference Files:**
-- `packages/modules/order/src/services/order-module-service.ts`
-- `packages/modules/api-key/src/services/api-key-module-service.ts`
+## API Route Patterns
 
-#### 5.2 API Route Pattern
+### Admin Routes: `packages/medusa/src/api/admin/<entity>/route.ts`
 
-**Route Structure:**
-- Named exports for HTTP methods: `GET`, `POST`, `PUT`, `DELETE`, `PATCH`
-- Type request: `AuthenticatedMedusaRequest<T>` or `MedusaRequest<T>`
-- Type response: `MedusaResponse<T>`
-- Access dependencies from `req.scope`
-- Use workflows from `@medusajs/core-flows`
+Named exports for HTTP methods (`GET`, `POST`, `PUT`, `DELETE`, `PATCH`). Use `AuthenticatedMedusaRequest` for admin, `MedusaRequest` for store.
 
-**Example:**
+Request typing and query utilities:
 ```typescript
 import { deleteOrderWorkflow } from "@medusajs/core-flows"
 import { HttpTypes } from "@medusajs/framework/types"
@@ -171,171 +153,212 @@ export const DELETE = async (
   res: MedusaResponse<HttpTypes.AdminOrderDeleteResponse>
 ) => {
   const { id } = req.params
-
-  await deleteOrderWorkflow(req.scope).run({
-    input: { id },
-  })
-
-  res.status(200).json({
-    id,
-    object: "order",
-    deleted: true,
-  })
+  await deleteOrderWorkflow(req.scope).run({ input: { id } })
+  res.status(200).json({ id, object: "order", deleted: true })
 }
 ```
 
-**Common Patterns:**
-- Filters: `req.filterableFields`
-- Pagination: `req.queryConfig.pagination`
-- Fields: `req.queryConfig.fields`
-- Resolve services: `req.scope.resolve(ContainerRegistrationKeys.QUERY)`
+**Key request utilities:**
+- `req.filterableFields` - fields available for filtering
+- `req.queryConfig.pagination` - pagination config (skip, take)
+- `req.queryConfig.fields` - requested fields
+- `req.scope.resolve(ContainerRegistrationKeys.QUERY)` - resolve query service
 
-**Reference Files:**
-- `packages/medusa/src/api/admin/orders/route.ts`
-- `packages/medusa/src/api/admin/payment-collections/[id]/route.ts`
+### Store Routes: `packages/medusa/src/api/store/<entity>/route.ts`
 
-#### 5.3 Workflow Pattern
+Same pattern but uses `MedusaRequest` (non-authenticated or customer-authenticated).
 
-**Step Definition:**
-- Create steps with `createStep(id, mainAction, compensationAction?)`
-- Return `StepResponse(result, compensationData)`
-- Compensation function handles rollback
+### Route File-based Discovery
 
-**Workflow Composition:**
-- Create workflows with `createWorkflow(id, function)`
-- Use `WorkflowData<T>` for typed input
-- Return `WorkflowResponse<T>` for typed output
-- Chain steps, use `transform()`, `when()`, `parallelize()`
-- Query data with `useQueryGraphStep()`
-- Emit events with `createHook()`
+Routes are auto-discovered from the filesystem. Route files can be:
+- `route.ts` - standard REST methods
+- `validators.ts` - Zod validation schemas (export `*Validations` / `*Fields`)
+- `middlewares.ts` - route-specific middleware
+- `helpers.ts` - shared helpers
 
-**Example Step:**
+## Workflow Pattern
+
+Workflows live in `packages/core/core-flows/src/<domain>/`:
+
+**Steps** (`createStep`):
 ```typescript
+import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
+
 export const deletePromotionsStep = createStep(
   "delete-promotions",
   async (ids: string[], { container }) => {
-    const promotionModule = container.resolve<IPromotionModuleService>(
-      Modules.PROMOTION
-    )
+    const promotionModule = container.resolve<IPromotionModuleService>(Modules.PROMOTION)
     await promotionModule.softDeletePromotions(ids)
     return new StepResponse(void 0, ids)
   },
   async (idsToRestore, { container }) => {
     if (!idsToRestore?.length) return
-    const promotionModule = container.resolve<IPromotionModuleService>(
-      Modules.PROMOTION
-    )
+    const promotionModule = container.resolve<IPromotionModuleService>(Modules.PROMOTION)
     await promotionModule.restorePromotions(idsToRestore)
   }
 )
 ```
 
-**Example Workflow:**
+**Workflows** (`createWorkflow`):
 ```typescript
+import { createWorkflow, WorkflowData, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import { createHook } from "@medusajs/framework/utils"
+
 export const deletePromotionsWorkflow = createWorkflow(
   "delete-promotions",
   (input: WorkflowData<{ ids: string[] }>) => {
     const deletedPromotions = deletePromotionsStep(input.ids)
-    const promotionsDeleted = createHook("promotionsDeleted", {
-      ids: input.ids,
-    })
-    return new WorkflowResponse(deletedPromotions, {
-      hooks: [promotionsDeleted],
-    })
+    const promotionsDeleted = createHook("promotionsDeleted", { ids: input.ids })
+    return new WorkflowResponse(deletedPromotions, { hooks: [promotionsDeleted] })
   }
 )
 ```
 
-**Reference Files:**
-- `packages/core/core-flows/src/promotion/steps/delete-promotions.ts`
-- `packages/core/core-flows/src/promotion/workflows/delete-promotions.ts`
-- `packages/core/core-flows/src/order/workflows/update-order.ts`
+**Common patterns:** `transform()`, `when()`, `parallelize()`, `useQueryGraphStep()`
 
-#### 5.4 Error Handling
+## Event & Subscriber Pattern
 
-**MedusaError Pattern:**
-- Use `new MedusaError(type, message)` for all error throwing
-- Provide contextual, user-friendly error messages
-- Validate inputs early in services and workflow steps
+Events emitted via `@EmitEvents()` decorator in services or via `createHook()` in workflows.
 
-**Common Error Types:**
-- `MedusaError.Types.NOT_FOUND` - Resource not found
-- `MedusaError.Types.INVALID_DATA` - Invalid input or state
-- `MedusaError.Types.NOT_ALLOWED` - Operation not permitted
+Subscribers auto-discover from the filesystem:
 
-**Example:**
 ```typescript
-import { MedusaError, validateEmail } from "@medusajs/framework/utils"
+import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework"
 
-// In service
-if (!entity) {
-  throw new MedusaError(
-    MedusaError.Types.NOT_FOUND,
-    `Order with id: ${id} was not found`
-  )
+export default async function mySubscriber({ event, container }: SubscriberArgs) {
+  const service = container.resolve("someService")
+  // handle event
 }
 
-// In workflow step
-if (input.email) {
-  validateEmail(input.email)
-}
-
-if (order.status === "cancelled") {
-  throw new MedusaError(
-    MedusaError.Types.NOT_ALLOWED,
-    "Cannot update a cancelled order"
-  )
+export const config: SubscriberConfig = {
+  event: "product.created",
+  context: { subscriberId: "my-unique-id" },
 }
 ```
 
-**Reference Files:**
-- `packages/core/utils/src/modules-sdk/medusa-internal-service.ts`
-- `packages/core/core-flows/src/order/workflows/update-order.ts`
+Subscribers live in `packages/core/framework/src/subscribers/` (tested in `__tests__/`).
 
-#### 5.5 Common Import Patterns
+## Module Links / Relationships
 
-**Path Aliases (configured in tsconfig.json):**
-- `@models` - Entity models
-- `@types` - DTO and type definitions
-- `@services` - Service dependencies
-- `@repositories` - Data access layer
-- `@utils` - Utility functions
+Links between modules are configured in `joiner-config.ts`:
 
-**Framework Imports:**
 ```typescript
-// Utils and decorators
-import {
-  InjectManager,
-  InjectTransactionManager,
-  MedusaContext,
-  MedusaError,
-  MedusaService,
-  EmitEvents,
-  Modules,
-} from "@medusajs/framework/utils"
+export const joinerConfig = {
+  serviceName: Modules.PRODUCT,
+  primaryKeys: ["id", "handle"],
+  linkableKeys: { product_id: "Product" },
+  alias: [
+    { name: ["product", "products"], args: { entity: "Product" } },
+  ],
+}
+```
+
+Cross-module links are defined as separate link modules in `packages/modules/link-modules/`.
+
+## Admin Dashboard (React)
+
+Located at `packages/admin/dashboard/src/`:
+
+```
+src/
+├── routes/        # Route-based pages (orders/, customers/, products/, ...)
+│   └── customers/
+│       ├── customer-list/         # List page
+│       ├── customer-detail/       # Detail page
+│       ├── customer-create/       # Create form
+│       ├── customer-edit/         # Edit form
+│       └── customer-metadata/     # Metadata widget
+├── components/    # Shared UI components
+├── hooks/         # Custom hooks
+├── providers/     # React context providers
+├── lib/           # Utilities
+└── i18n/          # Internationalization (translations)
+```
+
+- Built with React, Vite, Tailwind CSS
+- Translations in `src/i18n/` (JSON files per language)
+- Design system components in `packages/design-system/ui/src/components/`
+
+## JS SDK
+
+Located at `packages/core/js-sdk/src/`:
+
+```
+src/
+├── client.ts    # HTTP client (fetch-based)
+├── types.ts     # SDK-specific types
+├── admin/       # Admin API client methods
+├── store/       # Store API client methods
+└── auth/        # Auth helpers (MFA, etc.)
+```
+
+## Integration Tests
+
+Located in `integration-tests/`:
+
+```
+integration-tests/http/__tests__/
+├── admin/        # Admin API route tests
+│   ├── products/
+│   ├── orders/
+│   └── ...
+└── store/        # Store API route tests
+
+integration-tests/modules/__tests__/  # Module-level integration tests
+```
+
+Tests use:
+- Custom test runners with DB setup/teardown (PostgreSQL via `medusa-test-utils`)
+- `globalSetup.js.txt` / `globalTeardown.js.txt` for test lifecycle
+- `factories/` for creating test data
+- `environment-helpers/` for test environment configuration
+
+## Code Style
+
+- **Formatting**: No semicolons, double quotes, 2-space indent, ES5 trailing commas
+- **Naming**: kebab-case files, PascalCase types/classes, camelCase functions/vars, SCREAMING_SNAKE_CASE constants, snake_case DB fields
+- **TypeScript**: ES2021 target, Node16 module, strict null checks, decorators enabled
+- **Export**: Barrel exports via `export * from`
+
+## Common Imports
+
+```typescript
+// Framework utils
+import { InjectManager, MedusaContext, MedusaError, MedusaService, EmitEvents, Modules } from "@medusajs/framework/utils"
 
 // Types
-import type {
-  Context,
-  DAL,
-  IOrderModuleService,
-} from "@medusajs/framework/types"
+import type { Context, DAL, IOrderModuleService } from "@medusajs/framework/types"
 
 // Workflows
-import {
-  WorkflowData,
-  WorkflowResponse,
-  createStep,
-  createWorkflow,
-  transform,
-} from "@medusajs/framework/workflows-sdk"
+import { WorkflowData, WorkflowResponse, createStep, createWorkflow, transform } from "@medusajs/framework/workflows-sdk"
 
 // Core flows
 import { deleteOrderWorkflow } from "@medusajs/core-flows"
 
 // HTTP
-import {
-  AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework/http"
+import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+
+// Container keys
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+
+// Model DSL
+import { model } from "@medusajs/framework/utils"
 ```
+
+## Error Handling
+
+```typescript
+import { MedusaError } from "@medusajs/framework/utils"
+
+throw new MedusaError(MedusaError.Types.NOT_FOUND, "Order with id: ${id} was not found")
+throw new MedusaError(MedusaError.Types.INVALID_DATA, "Invalid input")
+throw new MedusaError(MedusaError.Types.NOT_ALLOWED, "Cannot update a cancelled order")
+```
+
+## Path Aliases (per-module tsconfig)
+
+- `@models` - Entity models
+- `@types` - DTO and type definitions
+- `@services` - Service dependencies
+- `@repositories` - Data access layer
+- `@utils` - Utility functions

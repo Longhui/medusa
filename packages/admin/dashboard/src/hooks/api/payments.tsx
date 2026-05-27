@@ -41,6 +41,53 @@ export const usePaymentProviders = (
   return { ...data, ...rest }
 }
 
+export const usePaymentProvider = (
+  id: string,
+  query?: HttpTypes.AdminGetPaymentProvidersParams,
+  options?: Omit<
+    UseQueryOptions<
+      HttpTypes.AdminPaymentProviderResponse,
+      FetchError,
+      HttpTypes.AdminPaymentProviderResponse,
+      QueryKey
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { data, ...rest } = useQuery({
+    queryFn: () => sdk.admin.payment.retrievePaymentProvider(id, query),
+    queryKey: paymentProvidersQueryKeys.detail(id),
+    ...options,
+  })
+
+  return { ...data, ...rest }
+}
+
+export const useUpdatePaymentProvider = (
+  id: string,
+  options?: UseMutationOptions<
+    HttpTypes.AdminPaymentProviderResponse,
+    FetchError,
+    { data?: Record<string, unknown> }
+  >
+) => {
+  return useMutation({
+    mutationFn: (payload) =>
+      sdk.admin.payment.updatePaymentProvider(id, payload),
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: paymentProvidersQueryKeys.detail(id),
+      })
+      queryClient.invalidateQueries({
+        queryKey: paymentProvidersQueryKeys.lists(),
+      })
+
+      options?.onSuccess?.(data, variables, context)
+    },
+    ...options,
+  })
+}
+
 export const usePayment = (
   id: string,
   query?: HttpTypes.AdminPaymentFilters,

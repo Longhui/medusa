@@ -3339,5 +3339,21 @@
       "authenticationFailed": "Authentication failed",
       "cloud": "Log in with Medusa Cloud"
     }
+  },
+  "paymentProviders": {
+    "domain": "Payment Providers",
+    "description": "Configure API credentials for your payment providers.",
+    "fields": {
+      "clientId": "Client ID",
+      "clientSecret": "Client Secret",
+      "webhookId": "Webhook ID",
+      "sandbox": "Sandbox mode",
+      "autoCapture": "Auto capture"
+    },
+    "tooltips": {
+      "sandbox": "When enabled, payments will be processed in the PayPal Sandbox environment.",
+      "autoCapture": "When enabled, payments will be captured immediately instead of being authorized first."
+    },
+    "noConfigAvailable": "This payment provider does not have configurable options."
   }
 }

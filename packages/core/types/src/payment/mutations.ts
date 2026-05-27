@@ -285,6 +285,27 @@ export interface CreatePaymentProviderDTO {
 }
 
 /**
+ * The attributes to update in a payment provider.
+ */
+export interface UpdatePaymentProviderDTO {
+  /**
+   * The provider's ID.
+   */
+  id: string
+
+  /**
+   * Whether the provider is enabled.
+   */
+  is_enabled?: boolean
+
+  /**
+   * Holds provider-specific configuration data in key-value pairs.
+   * For example, API credentials for third-party payment providers.
+   */
+  data?: Record<string, unknown> | null
+}
+
+/**
  * The payment session to be created.
  */
 export interface CreateAccountHolderDTO {

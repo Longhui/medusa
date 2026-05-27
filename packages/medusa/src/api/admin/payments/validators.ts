@@ -56,6 +56,15 @@ export const AdminCreatePaymentCapture = z
 export type AdminCreatePaymentRefundType = z.infer<
   typeof AdminCreatePaymentRefund
 >
+
+export type AdminUpdatePaymentProviderType = z.infer<
+  typeof AdminUpdatePaymentProvider
+>
+export const AdminUpdatePaymentProvider = z
+  .object({
+    data: z.record(z.string(), z.unknown()).optional(),
+  })
+  .strict()
 export const AdminCreatePaymentRefund = z
   .object({
     amount: z.number().optional(),

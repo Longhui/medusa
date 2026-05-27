@@ -3013,5 +3013,21 @@
     "minutes_other": "分钟",
     "seconds_one": "秒",
     "seconds_other": "秒"
+  },
+  "paymentProviders": {
+    "domain": "支付提供商",
+    "description": "配置支付提供商的 API 凭证。",
+    "fields": {
+      "clientId": "Client ID",
+      "clientSecret": "Client Secret",
+      "webhookId": "Webhook ID",
+      "sandbox": "沙箱模式",
+      "autoCapture": "自动捕获"
+    },
+    "tooltips": {
+      "sandbox": "启用后，支付将在 PayPal 沙箱环境中处理。",
+      "autoCapture": "启用后，付款将立即捕获，而不是先授权。"
+    },
+    "noConfigAvailable": "此支付提供商无可配置选项。"
   }
 }

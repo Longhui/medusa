@@ -1881,6 +1881,14 @@ export function getRouteMap({
                 },
               ],
             },
+            {
+              path: "payment-providers",
+              errorElement: <ErrorBoundary />,
+              lazy: () => import("../../routes/payment-providers/payment-provider-list"),
+              handle: {
+                breadcrumb: () => t("paymentProviders.domain"),
+              },
+            },
             ...settingsRoutes.flatMap((r) => r?.children || []),
           ],
         },

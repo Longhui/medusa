@@ -35,6 +35,7 @@ import {
   UpdateAccountHolderOutput,
   UpdatePaymentCollectionDTO,
   UpdatePaymentDTO,
+  UpdatePaymentProviderDTO,
   UpdatePaymentSessionDTO,
   UpsertPaymentCollectionDTO,
   WebhookActionResult,
@@ -1137,6 +1138,25 @@ export default class PaymentModuleService
       }),
       count,
     ]
+  }
+
+  @InjectManager()
+  @EmitEvents()
+  async updatePaymentProviders(
+    data: UpdatePaymentProviderDTO[],
+    @MedusaContext() sharedContext?: Context
+  ): Promise<PaymentProviderDTO[]> {
+    const providers = await this.paymentProviderService_.update(
+      data,
+      sharedContext
+    )
+
+    return await this.baseRepository_.serialize<PaymentProviderDTO[]>(
+      providers,
+      {
+        populate: true,
+      }
+    )
   }
 
   @InjectManager()

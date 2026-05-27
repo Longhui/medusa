@@ -12,6 +12,7 @@ import {
   AdminGetPaymentParams,
   AdminGetPaymentProvidersParams,
   AdminGetPaymentsParams,
+  AdminUpdatePaymentProvider,
 } from "./validators"
 
 export const adminPaymentRoutesMiddlewares: MiddlewareRoute[] = [
@@ -47,6 +48,27 @@ export const adminPaymentRoutesMiddlewares: MiddlewareRoute[] = [
       validateAndTransformQuery(
         AdminGetPaymentProvidersParams,
         queryConfig.listTransformPaymentProvidersQueryConfig
+      ),
+    ],
+  },
+  {
+    method: ["GET"],
+    matcher: "/admin/payments/payment-providers/:id",
+    middlewares: [
+      validateAndTransformQuery(
+        AdminGetPaymentProvidersParams,
+        queryConfig.retrieveTransformPaymentProviderQueryConfig
+      ),
+    ],
+  },
+  {
+    method: ["PUT"],
+    matcher: "/admin/payments/payment-providers/:id",
+    middlewares: [
+      validateAndTransformBody(AdminUpdatePaymentProvider),
+      validateAndTransformQuery(
+        AdminGetPaymentProvidersParams,
+        queryConfig.retrieveTransformPaymentProviderQueryConfig
       ),
     ],
   },
