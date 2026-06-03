@@ -8,6 +8,7 @@ import {
 import { MedusaError } from "@medusajs/framework/utils"
 import { StoreRequestWithContext } from "../../../store/types"
 import { DEFAULT_PRICE_FIELD_PATHS } from "./constants"
+import { getCachedRegion } from "./set-pricing-context"
 
 type TaxContextOptions = {
   priceFieldPaths?: string[]
@@ -47,6 +48,14 @@ export function setTaxContext(options: TaxContextOptions = {}) {
 }
 
 const getTaxInclusivityInfo = async (req: MedusaRequest) => {
+  // Reuse the region fetched by setPricingContext (which runs before this middleware)
+  // to avoid an additional DB query. Falls back to a dedicated query if the
+  // cached region is unavailable or was fetched with different fields.
+  const cached = getCachedRegion(req)
+  if (cached?.automatic_taxes !== undefined) {
+    return { automaticTaxes: cached.automatic_taxes }
+  }
+
   const region = await refetchEntity({
     entity: "region",
     idOrFilter: req.filterableFields.region_id as string,

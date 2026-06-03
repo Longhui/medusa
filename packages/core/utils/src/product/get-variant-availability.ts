@@ -100,10 +100,6 @@ export async function getTotalVariantAvailability(
 interface VariantItems {
   variant_id: string
   required_quantity: number
-  variant: {
-    manage_inventory: boolean
-    allow_backorder: boolean
-  }
   inventory: {
     location_levels: {
       location_id: string
@@ -158,11 +154,13 @@ const getDataForComputation = async (
   const { data: variantInventoryItems } = await query.graph(
     {
       entity: "product_variant_inventory_items",
+      // Note: variant.manage_inventory and variant.allow_backorder are intentionally
+      // omitted — they are not consumed by computeVariantAvailability and removing
+      // them avoids an unnecessary relationship resolution (product_variant pivot → variant)
+      // in the RemoteJoiner.
       fields: [
         "variant_id",
         "required_quantity",
-        "variant.manage_inventory",
-        "variant.allow_backorder",
         "inventory.*",
         "inventory.location_levels.*",
       ],

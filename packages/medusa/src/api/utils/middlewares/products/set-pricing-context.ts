@@ -12,6 +12,10 @@ type PricingContextOptions = {
   priceFieldPaths?: string[]
 }
 
+// Internal symbol used to share the fetched region entity across the middleware chain,
+// avoiding redundant DB queries (e.g. setTaxContext re-fetches the same region).
+const REGION_CACHE = Symbol("medusa:region")
+
 export function setPricingContext(options: PricingContextOptions = {}) {
   const { priceFieldPaths = DEFAULT_PRICE_FIELD_PATHS } = options
 
@@ -30,7 +34,9 @@ export function setPricingContext(options: PricingContextOptions = {}) {
       entity: "region",
       idOrFilter: req.filterableFields.region_id!,
       scope: req.scope,
-      fields: ["id", "currency_code"],
+      // Fetch automatic_taxes here so setTaxContext can reuse cached data
+      // instead of querying the region a second time.
+      fields: ["id", "currency_code", "automatic_taxes"],
       options: {
         cache: {
           enable: true,
@@ -48,6 +54,10 @@ export function setPricingContext(options: PricingContextOptions = {}) {
         return next(e)
       }
     }
+
+    // Cache the full region entity for downstream middleware (setTaxContext)
+    // to reuse, eliminating a redundant DB round-trip.
+    ;(req as any)[REGION_CACHE] = region
 
     const pricingContext: MedusaPricingContext = {
       region_id: region.id,
@@ -72,4 +82,12 @@ export function setPricingContext(options: PricingContextOptions = {}) {
     req.pricingContext = pricingContext
     return next()
   }
+}
+
+/**
+ * Read the region entity cached by setPricingContext (if available),
+ * avoiding a redundant DB query in downstream middleware.
+ */
+export function getCachedRegion(req: any): { id: string; currency_code?: string; automatic_taxes?: boolean } | undefined {
+  return req[REGION_CACHE]
 }

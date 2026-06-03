@@ -39,6 +39,15 @@ async function applyMaybeLinkFilterIfNecessary(
     return next()
   }
 
+  // If the publishable key context already tells us there's a single sales
+  // channel, we can skip the count query entirely — no link filter needed.
+  const pkSalesChannels: string[] =
+    (req as any).publishable_key_context?.sales_channel_ids ?? []
+  if (pkSalesChannels.length === 1) {
+    delete req.filterableFields.sales_channel_id
+    return next()
+  }
+
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
   const salesChannelsQueryRes = await query.graph({
     entity: "sales_channels",
