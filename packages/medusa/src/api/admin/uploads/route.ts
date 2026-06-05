@@ -33,15 +33,22 @@ async function compressImage(
     const sharp = (await import("sharp")).default
     const ext = path.extname(originalname).toLowerCase()
 
-    // Skip non-image files and already-optimized WebP/GIF
-    if (ext === ".webp" || ext === ".gif" || ext === ".svg") {
+    // Skip GIF/SVG (animated/vector formats)
+    if (ext === ".gif" || ext === ".svg") {
       return null
     }
 
+    const isWebp = ext === ".webp"
     const metadata = await sharp(buffer).metadata()
+
+    // If source is already WebP and within size limits, skip entirely
+    if (isWebp && metadata.width && metadata.width <= MAX_IMAGE_DIMENSION) {
+      return null
+    }
 
     // Only resize if image is larger than MAX_IMAGE_DIMENSION
     const resizeOpts: { width?: number; height?: number; fit?: string } = {}
+    let needsProcessing = isWebp // WebP that needs resize — reprocess to apply it
     if (
       (metadata.width && metadata.width > MAX_IMAGE_DIMENSION) ||
       (metadata.height && metadata.height > MAX_IMAGE_DIMENSION)
@@ -49,6 +56,12 @@ async function compressImage(
       resizeOpts.width = MAX_IMAGE_DIMENSION
       resizeOpts.height = MAX_IMAGE_DIMENSION
       resizeOpts.fit = "inside"
+      needsProcessing = true
+    }
+
+    // If no resize needed and source is already WebP, no processing required
+    if (!needsProcessing) {
+      return null
     }
 
     const webpName = `${path.basename(originalname, ext)}.webp`
