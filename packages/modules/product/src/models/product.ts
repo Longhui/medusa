@@ -85,6 +85,10 @@ const Product = model
      */
     external_id: model.text().nullable(),
     /**
+     * The product's SEO keywords (meta keywords).
+     */
+    meta_keywords: model.text().nullable(),
+    /**
      * The product's metadata.
      */
     metadata: model.json().nullable(),

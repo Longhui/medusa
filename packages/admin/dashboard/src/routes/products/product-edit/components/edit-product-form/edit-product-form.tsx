@@ -27,6 +27,7 @@ const EditProductSchema = zod.object({
   material: zod.string().optional(),
   description: zod.string().optional(),
   discountable: zod.boolean(),
+  meta_keywords: zod.string().optional(),
 })
 
 export const EditProductForm = ({ product }: EditProductFormProps) => {
@@ -46,6 +47,7 @@ export const EditProductForm = ({ product }: EditProductFormProps) => {
       handle: product.handle || "",
       description: product.description || "",
       discountable: product.discountable,
+      meta_keywords: product.meta_keywords || "",
     },
     schema: EditProductSchema,
     configs: configs,
@@ -209,6 +211,23 @@ export const EditProductForm = ({ product }: EditProductFormProps) => {
                     <Form.Item>
                       <Form.Label optional>
                         {t("fields.description")}
+                      </Form.Label>
+                      <Form.Control>
+                        <Textarea {...field} />
+                      </Form.Control>
+                      <Form.ErrorMessage />
+                    </Form.Item>
+                  )
+                }}
+              />
+              <Form.Field
+                control={form.control}
+                name="meta_keywords"
+                render={({ field }) => {
+                  return (
+                    <Form.Item>
+                      <Form.Label optional>
+                        SEO Keywords
                       </Form.Label>
                       <Form.Control>
                         <Textarea {...field} />

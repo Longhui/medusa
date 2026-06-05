@@ -61,14 +61,16 @@ export const listOptionConfig = {
 }
 
 /**
- * Default fields for admin products, including relations and nested fields.
+ * Default fields for a single product (detail/retrieve view).
+ * Includes all relations, nested prices with rules, options, etc.
  */
-export const defaultAdminProductFields = [
+const defaultAdminProductFields = [
   "id",
   "title",
   "subtitle",
   "status",
   "external_id",
+  "meta_keywords",
   "description",
   "handle",
   "is_giftcard",
@@ -104,6 +106,46 @@ export const defaultAdminProductFields = [
 ]
 
 /**
+ * Lightweight default fields for product LISTING.
+ *
+ * Heavy relations that each generate an additional SQL query via MikroORM's
+ * SELECT_IN strategy are excluded:
+ *   - type, options, options.values, tags, images → PDP-level only
+ *   - variants.prices, price_rules, variants.options, variants.images → PDP-level only
+ *   - full *variants → only variants.id is kept for variant count display
+ *
+ * If the client needs those, pass explicit fields[] in the request.
+ */
+const listAdminProductFields = [
+  "id",
+  "title",
+  "subtitle",
+  "status",
+  "external_id",
+  "meta_keywords",
+  "description",
+  "handle",
+  "is_giftcard",
+  "discountable",
+  "thumbnail",
+  "collection_id",
+  "type_id",
+  "weight",
+  "length",
+  "height",
+  "width",
+  "hs_code",
+  "origin_country",
+  "mid_code",
+  "material",
+  "created_at",
+  "updated_at",
+  "*collection",
+  "*sales_channels",
+  "variants.id",
+]
+
+/**
  * Query configuration for retrieving a single product.
  */
 export const retrieveProductQueryConfig = {
@@ -116,7 +158,7 @@ export const retrieveProductQueryConfig = {
  * Query configuration for listing products.
  */
 export const listProductQueryConfig = {
-  ...retrieveProductQueryConfig,
+  defaults: listAdminProductFields,
   defaultLimit: 50,
   isList: true,
   entity: Entities.product,

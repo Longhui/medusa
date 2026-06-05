@@ -1,6 +1,6 @@
 import { GlobeEurope, PencilSquare, Trash } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
-import { Container, Heading, StatusBadge, toast, usePrompt } from "@medusajs/ui"
+import { Container, Heading, StatusBadge, Text, toast, usePrompt } from "@medusajs/ui"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
@@ -114,7 +114,24 @@ export const ProductGeneralSection = ({
         </div>
       </div>
 
-      <SectionRow title={t("fields.description")} value={product.description} />
+      <div className="flex flex-col gap-y-2 px-6 py-4">
+        <Text size="small" weight="plus" leading="compact" className="text-ui-fg-subtle">
+          {t("fields.description")}
+        </Text>
+        {product.description ? (
+          <Text
+            size="small"
+            leading="compact"
+            className="text-ui-fg-subtle whitespace-pre-line text-pretty"
+          >
+            {product.description}
+          </Text>
+        ) : (
+          <Text size="small" leading="compact" className="text-ui-fg-muted">
+            -
+          </Text>
+        )}
+      </div>
       <SectionRow title={t("fields.subtitle")} value={product.subtitle} />
       <SectionRow title={t("fields.handle")} value={`/${product.handle}`} />
       <SectionRow title={t("fields.material")} value={product.material} />

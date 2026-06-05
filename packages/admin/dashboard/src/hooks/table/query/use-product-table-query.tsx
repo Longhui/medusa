@@ -6,9 +6,10 @@ type UseProductTableQueryProps = {
   pageSize?: number
 }
 
+// The backend listProductQueryConfig now excludes heavy relations by default.
+// We only request the fields the product table actually renders.
 const DEFAULT_FIELDS =
-  // TODO: Remove exclusion once we avoid including unnecessary relations by default in the query config
-  "id,title,handle,status,*collection,*sales_channels,variants.id,thumbnail,-type,-options,-tags,-images,-variants"
+  "id,title,handle,status,*collection,*sales_channels,variants.id,thumbnail"
 
 export const useProductTableQuery = ({
   prefix,

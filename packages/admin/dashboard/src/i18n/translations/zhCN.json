@@ -560,6 +560,11 @@
         "label": "可打折",
         "hint": "取消选中时,折扣将不会应用于此产品"
       },
+      "metaKeywords": {
+        "label": "SEO 关键词",
+        "hint": "用逗号分隔的关键词,有助于提升搜索引擎排名。",
+        "placeholder": "电商, 冬季夹克, 户外"
+      },
       "shipping_profile": {
         "label": "运输概况",
         "hint": "将产品连接到运输配置文件"

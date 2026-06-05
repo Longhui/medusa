@@ -123,6 +123,10 @@ export interface BaseProduct {
    */
   external_id: string | null
   /**
+   * The product's SEO keywords.
+   */
+  meta_keywords: string | null
+  /**
    * The date the product was created.
    */
   created_at: string | null

@@ -237,6 +237,10 @@ export interface AdminCreateProduct {
    */
   external_id?: string | null
   /**
+   * The product's SEO keywords.
+   */
+  meta_keywords?: string | null
+  /**
    * The ID of the product's collection.
    */
   collection_id?: string | null
@@ -468,6 +472,10 @@ export interface AdminUpdateProduct {
    * The ID of the product in an external or third-party system.
    */
   external_id?: string | null
+  /**
+   * The product's SEO keywords.
+   */
+  meta_keywords?: string | null
   /**
    * The ID of the associated product collection.
    */

@@ -604,6 +604,11 @@
         "label": "Discountable",
         "hint": "When unchecked, discounts will not be applied to this product"
       },
+      "metaKeywords": {
+        "label": "SEO Keywords",
+        "hint": "Comma-separated keywords to improve search engine ranking.",
+        "placeholder": "e-commerce, winter jacket, outdoor"
+      },
       "shipping_profile": {
         "label": "Shipping profile",
         "hint": "Connect the product to a shipping profile"
