@@ -102,7 +102,9 @@ export const UploadMediaFormItem = ({
         return
       }
 
-      files?.forEach((f) => append({ ...f, isThumbnail: false }))
+      files?.forEach((f, index) =>
+        append({ ...f, isThumbnail: index === 0 })
+      )
     },
     [form, append, hasInvalidFiles]
   )
