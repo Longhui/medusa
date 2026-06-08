@@ -3,6 +3,7 @@ import { Button, ProgressStatus, ProgressTabs, toast } from "@medusajs/ui"
 import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { z } from "zod"
 import {
   RouteFocusModal,
   useRouteModal,
@@ -99,7 +100,7 @@ export const ProductCreateForm = ({
     [watchedVariants]
   )
 
-  const handleSubmit = form.handleSubmit(async (values, e) => {
+  const submitHandler = form.handleSubmit(async (values, e) => {
     let isDraftSubmission = false
     if (e?.nativeEvent instanceof SubmitEvent) {
       const submitter = e?.nativeEvent?.submitter as HTMLButtonElement
@@ -178,6 +179,21 @@ export const ProductCreateForm = ({
       }
     )
   })
+
+  const handleSubmit = async (e?: React.BaseSyntheticEvent) => {
+    try {
+      await submitHandler(e)
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const messages = error.issues.map((issue) =>
+          `${issue.path.join(".")}: ${issue.message}`
+        )
+        toast.error(messages.join("\n"))
+      } else if (error instanceof Error) {
+        toast.error(error.message)
+      }
+    }
+  }
 
   const onNext = async (currentTab: Tab) => {
     const valid = await form.trigger()
