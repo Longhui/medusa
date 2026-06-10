@@ -32,6 +32,7 @@ import {
 import { useQueryParams } from "../../../../../hooks/use-query-params"
 import { PRODUCT_VARIANT_IDS_KEY } from "../../../common/constants"
 import { Thumbnail } from "../../../../../components/common/thumbnail"
+import { getLocaleAmount } from "../../../../../lib/money-amount-helpers"
 import { useFeatureFlag } from "../../../../../providers/feature-flag-provider"
 
 type ProductVariantSectionProps = {
@@ -71,7 +72,7 @@ export const ProductVariantSection = ({
         ? JSON.parse(manage_inventory)
         : undefined,
       fields:
-        "title,sku,thumbnail,*options,created_at,*inventory_items.inventory.location_levels,inventory_quantity,manage_inventory",
+        "title,sku,thumbnail,*options,*prices,*images,created_at,*inventory_items.inventory.location_levels,inventory_quantity,manage_inventory",
     },
     {
       placeholderData: keepPreviousData,
@@ -366,9 +367,13 @@ const useColumns = (product: HttpTypes.AdminProduct) => {
         headerAlign: "center",
         maxSize: 72,
         cell: ({ row }) => {
+          const variant = row.original as HttpTypes.AdminProductVariant & {
+            images?: { url: string; id: string }[]
+          }
+          const src = variant.images?.[0]?.url || variant.thumbnail
           return (
             <div className="flex items-center pl-[1px]">
-              <Thumbnail src={row.original.thumbnail} />
+              <Thumbnail src={src} />
             </div>
           )
         },
@@ -384,6 +389,35 @@ const useColumns = (product: HttpTypes.AdminProduct) => {
         enableSorting: true,
         sortAscLabel: t("filters.sorting.alphabeticallyAsc"),
         sortDescLabel: t("filters.sorting.alphabeticallyDesc"),
+      }),
+      columnHelper.display({
+        id: "prices",
+        header: t("fields.price"),
+        cell: ({ row }) => {
+          const prices = (row.original as any).prices as
+            | { amount: number; currency_code: string; rules?: Record<string, unknown> }[]
+            | undefined
+          if (!prices?.length) {
+            return <span className="text-ui-fg-muted">-</span>
+          }
+          const displayed = prices.slice(0, 2)
+          const remaining = prices.length - 2
+          return (
+            <div className="flex flex-col gap-0.5">
+              {displayed.map((p) => (
+                <span key={p.currency_code} className="truncate">
+                  {getLocaleAmount(p.amount, p.currency_code)}
+                </span>
+              ))}
+              {remaining > 0 && (
+                <span className="text-ui-fg-muted txt-small">
+                  +{remaining}
+                </span>
+              )}
+            </div>
+          )
+        },
+        maxSize: 200,
       }),
       ...optionColumns,
       columnHelper.display({

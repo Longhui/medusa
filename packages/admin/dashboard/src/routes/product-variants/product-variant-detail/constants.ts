@@ -6,7 +6,7 @@ import {
 } from "@medusajs/types"
 
 export const VARIANT_DETAIL_FIELDS =
-  "*inventory_items,*inventory_items.inventory,*inventory_items.inventory.location_levels,*options,*options.option,*prices,*prices.price_rules,+images.id,+images.url,+images.variants.id"
+  "*inventory_items,*inventory_items.inventory,*inventory_items.inventory.location_levels,*options,*options.option,*prices,*prices.price_rules,+images.id,+images.url,+images.variants.id,product.thumbnail,product.images.id,product.images.url"
 
 export type ExtendedVariantPrice = AdminPrice & {
   rules?: Record<string, unknown>

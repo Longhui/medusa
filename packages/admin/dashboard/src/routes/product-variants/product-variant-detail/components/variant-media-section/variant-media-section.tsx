@@ -6,10 +6,13 @@ import { PencilSquare, ThumbnailBadge } from "@medusajs/icons"
 import { ActionMenu } from "../../../../../components/common/action-menu"
 
 type VariantMediaSectionProps = {
-  variant: Omit<HttpTypes.AdminProductVariant, "images"> & {
+  variant: Omit<HttpTypes.AdminProductVariant, "images" | "product"> & {
     images?: (HttpTypes.AdminProductImage & {
       variants?: HttpTypes.AdminProductVariant[]
     })[]
+    product?: (Pick<HttpTypes.AdminProduct, "thumbnail"> & {
+      images?: HttpTypes.AdminProductImage[] | null
+    }) | null
   }
 }
 
@@ -17,9 +20,20 @@ export const VariantMediaSection = ({ variant }: VariantMediaSectionProps) => {
   const { t } = useTranslation()
 
   // show only variant scoped images
-  const media = (variant.images || []).filter((image) =>
+  const variantMedia = (variant.images || []).filter((image) =>
     image.variants?.some((imageVariant) => imageVariant.id === variant.id)
   )
+
+  // fallback to product-level images when no variant-specific images
+  const productMedia =
+    !variantMedia.length
+      ? variant.product?.images?.filter(
+          (img) =>
+            !variant.images?.some((vi) => vi.id === img.id)
+        ) || []
+      : []
+
+  const hasMedia = variantMedia.length > 0 || productMedia.length > 0
 
   return (
     <Container className="divide-y p-0">
@@ -39,9 +53,9 @@ export const VariantMediaSection = ({ variant }: VariantMediaSectionProps) => {
           ]}
         />
       </div>
-      {media.length > 0 ? (
+      {hasMedia ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-4 px-6 py-4">
-          {media.map((i) => {
+          {variantMedia.map((i) => {
             return (
               <div
                 className="shadow-elevation-card-rest hover:shadow-elevation-card-hover transition-fg group relative aspect-square size-full overflow-hidden rounded-[8px]"
@@ -54,6 +68,16 @@ export const VariantMediaSection = ({ variant }: VariantMediaSectionProps) => {
                     </Tooltip>
                   </div>
                 )}
+                <img src={i.url} className="size-full object-cover" />
+              </div>
+            )
+          })}
+          {productMedia.map((i) => {
+            return (
+              <div
+                className="shadow-elevation-card-rest hover:shadow-elevation-card-hover transition-fg group relative aspect-square size-full overflow-hidden rounded-[8px]"
+                key={i.id}
+              >
                 <img src={i.url} className="size-full object-cover" />
               </div>
             )
